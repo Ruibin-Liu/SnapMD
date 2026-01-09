@@ -88,6 +88,9 @@
       overflow-y: auto;
       padding: 4px 0;
     }
+    .sidebar-content.drag-over {
+      background: rgba(0, 123, 255, 0.1);
+    }
     .sidebar-item {
       padding: 6px 10px;
       cursor: pointer;
@@ -1382,6 +1385,64 @@ function hello() {
         reader.readAsText(file);
       }
       this.value = '';
+    });
+
+    // =============================================
+    // Drag and Drop Files to Sidebar
+    // =============================================
+
+    sidebarContent.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      sidebarContent.classList.add('drag-over');
+    });
+
+    sidebarContent.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      sidebarContent.classList.remove('drag-over');
+    });
+
+    sidebarContent.addEventListener('drop', function(e) {
+      e.preventDefault();
+      sidebarContent.classList.remove('drag-over');
+
+      const files = e.dataTransfer.files;
+      if (files.length === 0) return;
+
+      const folderId = currentFolderId;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.name.toLowerCase().endsWith('.md') || file.name.toLowerCase().endsWith('.markdown')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const fileId = generateId();
+            data.files[fileId] = {
+              id: fileId,
+              name: file.name,
+              content: e.target.result,
+              folderId: folderId,
+              createdAt: Date.now(),
+              updatedAt: Date.now()
+            };
+
+            if (folderId && data.folders[folderId]) {
+              if (!data.folders[folderId].files) {
+                data.folders[folderId].files = [];
+              }
+              data.folders[folderId].files.push(fileId);
+            }
+
+            saveStorage();
+            renderSidebar();
+
+            if (i === 0) {
+              openFile(fileId);
+            }
+          };
+          reader.readAsText(file);
+        }
+      }
     });
 
     document.getElementById('zip-input').addEventListener('change', function(e) {
