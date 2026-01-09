@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Markdown Editor</title>
+  <title>SnapMD</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -505,7 +505,7 @@
     function initializeExampleFile() {
       if (Object.keys(data.files).length === 0 && Object.keys(data.folders).length === 0) {
         const exampleFileId = generateId();
-        const exampleContent = `# Welcome to Markdown Editor
+        const exampleContent = `# Welcome to SnapMD 
 
 This is a **simple** markdown editor with live preview.
 
