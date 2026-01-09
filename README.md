@@ -32,8 +32,11 @@ It’s designed for:
 - 💾 **Auto‑save via localStorage**
 - 📤 Export as `.md` or PDF (via browser print)
 - 📂 Open local `.md` files
+- 📦 Export/Import Project as ZIP
 - ↔️ Resizable editor / preview panes
 - 🎹 Handy keyboard shortcuts
+- 🌙 Dark and light theme support
+- 📥 Drag & drop `.md` files into folders
 
 ---
 
@@ -126,9 +129,8 @@ SnapMD follows a few simple rules:
 
 Only if it stays simple:
 
-- [ ] Optional dark/light themes
 - [ ] Export rendered HTML
-- [ ] Drag & drop `.md` files
+- [ ] More keyboard shortcuts
 
 No promises — simplicity comes first.
 
