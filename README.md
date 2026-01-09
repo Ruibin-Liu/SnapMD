@@ -54,7 +54,7 @@ SnapMD is intentionally boring in the best way.
 
 ### Option 1: Download and open
 
-1. Download `markdown-editor.html`
+1. Download `index.html` 
 2. Double‑click it
 3. Start writing Markdown
 
@@ -63,9 +63,9 @@ That’s it.
 ### Option 2: Clone the repo
 
 ```bash
-git clone https://github.com/your-username/snapmd.git
-cd snapmd
-open markdown-editor.html
+git clone https://github.com/Ruibin-Liu/SnapMD/SnapMD.git
+cd SnapMD
+open index.html       # rename it if needed
 ```
 
 No install. No build. No serve command.
@@ -117,13 +117,9 @@ SnapMD follows a few simple rules:
 ---
 
 ## Screenshots
-
-_(Optional but highly recommended for GitHub stars)_
-
-```md
-![SnapMD Screenshot](screenshot.png)
-```
-
+  
+![SnapMD Screenshot](https://github.com/Ruibin-Liu/SnapMD/blob/main/assets/snapshot.png)
+ 
 ---
 
 ## Roadmap (Maybe)
