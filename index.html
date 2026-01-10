@@ -471,6 +471,7 @@
         <div id="menu-new-folder">New Folder</div>
         <div id="menu-open">Open .md</div>
         <div id="menu-download">Download .md</div>
+        <div id="menu-export-html">Export HTML</div>
         <div id="menu-export">Export PDF</div>
         <hr style="margin: 4px 0; border: none; border-top: 1px solid #e9ecef;">
         <div id="menu-export-zip">Export Project as ZIP</div>
@@ -493,6 +494,46 @@
 
       <div class="shortcut-list">
         <li>
+          <span class="shortcut-key">Cmd/Ctrl + S</span>
+          <span class="shortcut-desc">Save current file</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Cmd/Ctrl + O</span>
+          <span class="shortcut-desc">Open .md file</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Cmd/Ctrl + N</span>
+          <span class="shortcut-desc">New file</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Cmd/Ctrl + B</span>
+          <span class="shortcut-desc">Toggle sidebar</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Cmd/Ctrl + D</span>
+          <span class="shortcut-desc">Toggle dark/light theme</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Cmd/Ctrl + F</span>
+          <span class="shortcut-desc">Focus search</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Cmd/Ctrl + H</span>
+          <span class="shortcut-desc">Toggle help modal</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Cmd/Ctrl + I</span>
+          <span class="shortcut-desc">Make text italic</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Cmd/Ctrl + K</span>
+          <span class="shortcut-desc">Create code block</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Cmd/Ctrl + Shift + B</span>
+          <span class="shortcut-desc">Make text bold</span>
+        </li>
+        <li>
           <span class="shortcut-key">Cmd/Ctrl + Shift + L</span>
           <span class="shortcut-desc">Create anchor at selected text</span>
         </li>
@@ -503,6 +544,10 @@
         <li>
           <span class="shortcut-key">Cmd/Ctrl + V</span>
           <span class="shortcut-desc">Paste with anchor → Create link to anchor</span>
+        </li>
+        <li>
+          <span class="shortcut-key">Esc</span>
+          <span class="shortcut-desc">Close help modal</span>
         </li>
       </div>
     </div>
@@ -941,6 +986,70 @@ function hello() {
       html2pdf().set(opt).from(preview).save();
     }
 
+    function exportHTML(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      const htmlContent = preview.innerHTML;
+      const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exported Document</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      padding: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1, h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; }
+    p { margin-bottom: 1em; }
+    ul, ol { margin-left: 2em; margin-bottom: 1em; }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.9em;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin-bottom: 1em;
+    }
+    pre code { background: none; padding: 0; }
+    blockquote {
+      border-left: 4px solid #ddd;
+      padding-left: 16px;
+      margin: 1em 0;
+      color: #666;
+    }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+${htmlContent}
+</body>
+</html>`;
+      const blob = new Blob([fullHTML], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'document.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
     function exportZIP(event) {
       if (event) {
         event.preventDefault();
@@ -1248,36 +1357,113 @@ function hello() {
     // =============================================
 
     document.addEventListener('keydown', function(e) {
-      // Cmd/Ctrl + Shift + L - Create anchor reference target
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'L') {
-        e.preventDefault();
-        const start = editor.selectionStart;
-        const end = editor.selectionEnd;
-        const selectedText = editor.value.substring(start, end);
-        if (selectedText) {
-          const trimmed = selectedText.trim();
-          const headerMatch = trimmed.match(/^(#{1,6})\s+(.+)$/);
-          if (headerMatch) {
-            // If it's a header, use the header text
-            referenceTarget = headerMatch[2];
-          } else {
-            referenceTarget = trimmed;
-            const anchor = referenceTarget.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-            const anchorTag = `<a id="${anchor}"></a>`;
+      const cmdOrCtrl = e.metaKey || e.ctrlKey;
 
-            const before = editor.value.substring(0, end);
-            const after = editor.value.substring(end);
-
-            if (!before.includes(anchorTag)) {
-              isProgrammaticScroll = true;
-              editor.value = before + anchorTag + after;
-              updatePreview();
-              setTimeout(() => {
-                isProgrammaticScroll = false;
-              }, 100);
+      if (cmdOrCtrl) {
+        switch(e.key) {
+          case 's':
+            e.preventDefault();
+            saveCurrentFile();
+            break;
+          case 'o':
+            if (!e.shiftKey) {
+              e.preventDefault();
+              document.getElementById('file-input').click();
             }
-          }
+            break;
+          case 'n':
+            if (!e.shiftKey) {
+              e.preventDefault();
+              closeDropdowns();
+              createFile();
+            }
+            break;
+          case 'b':
+            if (!e.shiftKey && !e.altKey) {
+              e.preventDefault();
+              toggleSidebar();
+            }
+            break;
+          case 'd':
+            if (!e.shiftKey) {
+              e.preventDefault();
+              toggleTheme();
+            }
+            break;
+          case 'f':
+            if (!e.shiftKey) {
+              e.preventDefault();
+              searchInput.focus();
+            }
+            break;
+          case 'h':
+            if (!e.shiftKey) {
+              e.preventDefault();
+              closeDropdowns();
+              showHelp();
+            }
+            break;
+          case 'k':
+            if (!e.shiftKey) {
+              e.preventDefault();
+              const start = editor.selectionStart;
+              const end = editor.selectionEnd;
+              const selectedText = editor.value.substring(start, end);
+              insertText(`\`\`\`\n${selectedText}\n\`\`\``);
+            }
+            break;
+          case 'i':
+            if (!e.shiftKey) {
+              e.preventDefault();
+              const start = editor.selectionStart;
+              const end = editor.selectionEnd;
+              const selectedText = editor.value.substring(start, end);
+              insertText(`*${selectedText}*`);
+            }
+            break;
+          case 'B':
+            if (e.shiftKey) {
+              e.preventDefault();
+              const start = editor.selectionStart;
+              const end = editor.selectionEnd;
+              const selectedText = editor.value.substring(start, end);
+              insertText(`**${selectedText}**`);
+            }
+            break;
+          case 'L':
+            if (e.shiftKey) {
+              e.preventDefault();
+              const start = editor.selectionStart;
+              const end = editor.selectionEnd;
+              const selectedText = editor.value.substring(start, end);
+              if (selectedText) {
+                const trimmed = selectedText.trim();
+                const headerMatch = trimmed.match(/^(#{1,6})\s+(.+)$/);
+                if (headerMatch) {
+                  referenceTarget = headerMatch[2];
+                } else {
+                  referenceTarget = trimmed;
+                  const anchor = referenceTarget.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                  const anchorTag = `<a id="${anchor}"></a>`;
+                  const before = editor.value.substring(0, end);
+                  const after = editor.value.substring(end);
+                  if (!before.includes(anchorTag)) {
+                    isProgrammaticScroll = true;
+                    editor.value = before + anchorTag + after;
+                    updatePreview();
+                    setTimeout(() => {
+                      isProgrammaticScroll = false;
+                    }, 100);
+                  }
+                }
+              }
+            }
+            break;
         }
+      }
+
+      if (e.key === 'Escape') {
+        closeHelp();
       }
     });
 
@@ -1570,6 +1756,12 @@ function hello() {
       e.preventDefault();
       closeDropdowns();
       downloadMarkdown(e);
+    });
+    document.getElementById('menu-export-html').addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      closeDropdowns();
+      exportHTML(e);
     });
     document.getElementById('menu-export').addEventListener('click', (e) => {
       e.stopPropagation();
