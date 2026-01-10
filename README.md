@@ -30,11 +30,11 @@ It’s designed for:
 - 🌐 **Works offline**
 - 🧠 **GitHub‑flavored Markdown**
 - 💾 **Auto‑save via localStorage**
-- 📤 Export as `.md` or PDF (via browser print)
+- 📤 Export as `.md`, HTML, or PDF
 - 📂 Open local `.md` files
 - 📦 Export/Import Project as ZIP
 - ↔️ Resizable editor / preview panes
-- 🎹 Handy keyboard shortcuts
+- 🎹 Comprehensive keyboard shortcuts
 - 🌙 Dark and light theme support
 - 📥 Drag & drop `.md` files into folders
 
@@ -79,8 +79,18 @@ No install. No build. No serve command.
 
 | Shortcut | Action |
 |--------|--------|
-| `Ctrl / Cmd + Shift + L` | Copy selected text as reference target |
-| `Ctrl / Cmd + V` | Paste URL over selection → Markdown link |
+| `Ctrl / Cmd + S` | Save current file |
+| `Ctrl / Cmd + O` | Open .md file |
+| `Ctrl / Cmd + N` | New file |
+| `Ctrl / Cmd + B` | Toggle sidebar |
+| `Ctrl / Cmd + D` | Toggle dark/light theme |
+| `Ctrl / Cmd + F` | Focus search |
+| `Ctrl / Cmd + H` | Toggle help modal |
+| `Ctrl / Cmd + I` | Make text italic |
+| `Ctrl / Cmd + K` | Create code block |
+| `Ctrl / Cmd + Shift + B` | Make text bold |
+| `Ctrl / Cmd + Shift + L` | Create anchor at selected text |
+| `Ctrl / Cmd + V` | Paste URL → Create inline link |
 | `Esc` | Close help modal |
 
 ---
@@ -128,9 +138,6 @@ SnapMD follows a few simple rules:
 ## Roadmap (Maybe)
 
 Only if it stays simple:
-
-- [ ] Export rendered HTML
-- [ ] More keyboard shortcuts
 
 No promises — simplicity comes first.
 
